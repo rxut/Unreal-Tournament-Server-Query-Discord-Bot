@@ -167,9 +167,9 @@ class ServerResponse{
                         string += ", ";
                     }
 
-                    if(currentFlag == ":video_game:"){
-                       currentFlag = ":eyes:";
-                    }
+                     //if(currentFlag == ":video_game:"){
+                    //    currentFlag = ":eyes:";
+                   //}
                     string += `${currentFlag} ${this.sanitizeName(p.name)}`;
                 }
             }
@@ -177,9 +177,9 @@ class ServerResponse{
 
         if(string == ""){
             if(!bSpectator){
-                string = ":zzz: No players.";
+                string = "No players";
             }else{
-                string = ":zzz: There are currently no spectators.";
+                string = "No spectators";
             }
         }
 
@@ -195,11 +195,17 @@ class ServerResponse{
         const fields = [];
 
         const teamNames = [
+            `Red Team [${this.teams[0].score} frags]`,
+            `Blue Team [${this.teams[1].score} frags]`,
+            `Green Team [${this.teams[2].score} frags]`,
+            `Yellow Team [${this.teams[3].score} frags]`
+        ];
+        /*const teamNames = [
             `:red_square: Red Team ${this.teams[0].score}`,
             `:blue_square: Blue Team ${this.teams[1].score}`,
             `:green_square: Green Team ${this.teams[2].score}`,
             `:yellow_square: Yellow Team ${this.teams[3].score}`
-        ];
+        ];*/
 
         this.maxTeams = parseInt(this.maxTeams);
 
@@ -312,10 +318,10 @@ class ServerResponse{
                         }
                     }
 
-                    let string = `:no_entry: **${this.ip}:${this.port}** has timed out!`;
+                    let string = `${this.ip}:${this.port} has timed out!`;
 
                     if(this.ip === undefined){
-                        string = `:no_entry: That ip does not exist!`;
+                        string = `That ip does not exist!`;
                     }
 
                     this.bSentMessage = true;
@@ -334,38 +340,41 @@ class ServerResponse{
 
             this.bReceivedFinal = true;
 
-            
             let description = `
-:wrestling: Players **${this.totalPlayers}/${this.maxPlayers}
-:pushpin: ${this.gametype}
-:map: ${this.mapName}**\n`;
+            ${this.mapName} - ${this.totalPlayers}/${this.maxPlayers-this.spectators} Players - `; // rX - simpler description
+
+            /*let description = `
+            :wrestling: Players **${this.totalPlayers}/${this.maxPlayers-this.spectators}
+            :pushpin: ${this.gametype}
+            :map: ${this.mapName}**\n`;*/
             
-            if(!this.bUnreal){
+            /*if(!this.bUnreal){
                 description += `:goal: Target Score **${this.goalscore}**\n`;
-            }
+            }*/
 
             /*description = :stopwatch: Time Limit ${this.timeLimit} Minutes
             :stopwatch: Time Remaining ${this.getMMSS(this.remainingTime)} Minutes*/
 
-            if(this.timeLimit !== undefined){
+           /* if(this.timeLimit !== undefined){
                 description += `:stopwatch: Time Limit **${this.timeLimit} Minutes**
                 `;
-            }
+            }*/
 
-            if(this.remainingTime !== undefined){
-                description += `:stopwatch: Time Remaining **${this.getMMSS(this.remainingTime)} Minutes**
-                `;
-            }
+            //if(this.remainingTime < this.timeLimit){
+                description += `Time Remaining: ${this.getMMSS(this.remainingTime)}`;
+           // }else{
+           //     description == `Waiting for start`;
+           //  } // rX - simpler description
 
-            if(this.protection !== undefined){
+            /* if(this.protection !== undefined){
                 description += `:shield: ${this.protection}`;
-            }
+            }*/
         // console.table(this.players);
 
             const country = this.getServerCountry();
 
             let fields = this.createPlayerFields()
-            fields.push({"name": "Join Server", "value": `<unreal://${this.ip}:${this.port}>`, "inline": false});
+            fields.push({"name": " ", "value": `<unreal://${this.ip}:${this.port}>`, "inline": false});
                 
             const embed = new Discord.EmbedBuilder()
             .setTitle(`${country}${this.name}`)
@@ -595,7 +604,7 @@ class ServerResponse{
             bIgnoreHealth = true;
         }    
 
-        string += `:rainbow_flag: \`${nameTitle}${sexTitle}${teamTitle}${pingTitle}${timeTitle}${healthTitle} ${spreeTitle} ${deathsTitle}${fragsTitle}\`\n`;
+        string += `:globe_with_meridians: \`${nameTitle}${sexTitle}${teamTitle}${pingTitle}${timeTitle}${healthTitle} ${spreeTitle} ${deathsTitle}${fragsTitle}\`\n`;
 
         let name = "";
         let flag = "";
@@ -692,7 +701,7 @@ class ServerResponse{
         }
 
         if(this.players.length == 0){
-            string += `:zzz: **There are currently no players in the servers.**`
+            string += `There are currently no players in the servers.`
         }
 
         this.discordMessage.send(string);
@@ -715,7 +724,7 @@ class ServerResponse{
         return value;
 
     }
-
+    /*
     sendExtendedResponse(){
 
         if(this.bUnreal){
@@ -828,7 +837,7 @@ class ServerResponse{
 
         this.bSentMessage = true;
     }
-
+    */
 
     //used to check unreal player count
     getCurrentPlayers(){

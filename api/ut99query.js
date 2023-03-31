@@ -364,14 +364,14 @@ class UT99Query{
                     }
 
                     return;
-
-                }else if(response.type === 'extended' && response.bHaveUnrealMutators){
+                }
+                /*else if(response.type === 'extended' && response.bHaveUnrealMutators){
                     
                     response.sendExtendedResponse();
 
                     return;
 
-                }else if(response.type === 'full' && response.bFetchedAllPlayers() && response.bHaveUnrealMutators){
+                }*/else if(response.type === 'full' && response.bFetchedAllPlayers() && response.bHaveUnrealMutators){
                     response.sendFullServerResponse(this.channels, this.servers, config.embedColor, Discord);
                     return;
                 }
@@ -409,11 +409,11 @@ class UT99Query{
                     response.sendPlayersResponse();
                     return true;
 
-                }else if(response.type == "extended"){
+                }/*else if(response.type == "extended"){
 
                     response.sendExtendedResponse();
                     return true;
-                }
+                }*/
             }
 
             return false;
@@ -787,7 +787,7 @@ class UT99Query{
         });
     }
 
-    getExtended(ip, port, message){
+    /*getExtended(ip, port, message){
 
         dns.lookup(ip, (err, address, family) =>{
 
@@ -802,7 +802,7 @@ class UT99Query{
                 }
             });
         });
-    }
+    }*/
 }
 
 

@@ -23,7 +23,7 @@ class Servers{
 
             if(result === null){
 
-                message.channel.send(`${config.failIcon} Incorrect syntax for **addserver**`);
+                message.channel.send(`${config.failIcon} Incorrect syntax for addserver.`);
                 return;
 
             }else{
@@ -201,12 +201,12 @@ class Servers{
 
                 if(id !== id){
 
-                    message.channel.send(`${config.failIcon} Incorrect syntax for ${config.commandPrefix}removeserver, id must be a valid integer.`);
+                    message.channel.send(`${config.failIcon} Incorrect syntax for ${config.commandPrefix}removeserver, id must be a valid number.`);
                     return;
 
                 }else if(id > servers.length || id < 1){
 
-                    message.channel.send(`${config.failIcon} There are no servers with the id ${id}`);
+                    message.channel.send(`${config.failIcon} There are no servers with the id ${id}.`);
                     return;
 
                 }
@@ -505,7 +505,7 @@ class Servers{
             if(serverBlocks.length == 1){
                 fields.push({
                     name: "Shorter server query command",
-                    value: `Type **${config.commandPrefix}q id** to query a server instead of ip:port.`,
+                    value: `Type **${config.commandPrefix}qID** to query a server instead of ip:port.`,
                     inline: false
                 });
             }
@@ -521,7 +521,7 @@ class Servers{
                     .setDescription(serverBlocks[i]);
 
                 if(i === serverBlocks.length - 1){
-                    embed.addFields("Shorter server query command", `Type **${config.commandPrefix}q id** to query a server instead of ip:port.` ,false);
+                    embed.addFields("Shorter server query command", `Type **${config.commandPrefix}qID** to query a server instead of ip:port.` ,false);
                 }
 
                 await message.channel.send({ embeds: [embed] });

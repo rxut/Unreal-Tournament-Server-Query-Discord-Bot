@@ -6,6 +6,7 @@ const Database = require('./db');
 const Servers = require('./servers');
 const Channels = require('./channels');
 const Roles = require('./roles');
+const { EmbedBuilder } = require('discord.js');
 
 class Bot{
 
@@ -121,15 +122,14 @@ class Bot{
             if(await this.channels.bBotCanCommentInChannel(message)){
 
                 const helpReg = /^.help$/i;
-                const shortServerQueryReg = /^.q\d+$/i;
-                const serverQueryReg = /^.q .+$/i;
+       const shortServerQueryReg = /^.q\d+$/i;
                 const listReg = /^.servers/i;
                 const activeReg = /^.active/i;
                 const ipReg = /^.ip\d+/i;
-                const extendedReg = /^.extended \d+$/i;
-                const altExtendedReg = /^.extended .+$/i;
-                const playersReg = /^.players \d+$/i;
-                const altPlayersReg = /^.players .+/i;
+                //const extendedReg = /^.extended \d+$/i;
+                //const altExtendedReg = /^.extended .+$/i;
+                //const playersReg = /^.players \d+$/i;
+                //const altPlayersReg = /^.players .+/i;
 
                 if(helpReg.test(message.content)){
 
@@ -150,8 +150,8 @@ class Bot{
                 }else if(activeReg.test(message.content)){
 
                     this.servers.listServers(Discord, message, true);
-
-                }else if(ipReg.test(message.content)){
+                }
+                /*else if(ipReg.test(message.content)){
 
                     this.servers.getIp(message);
 
@@ -171,7 +171,7 @@ class Bot{
 
                     this.queryPlayersAlt(message);
 
-                }
+                }*/
 
 
             }else{
@@ -191,7 +191,7 @@ class Bot{
 
         const adminCommands = [
 
-            {"name": `${p}allowchannel`, "content": `Enables the bot to be used in the current channel.`},
+            {"name": `${p}allowchannel`, "content": `Enables the bot in the current channel.`},
             {"name": `${p}blockchannel`, "content": `Disables the bot in the current channel.`},
             {"name": `${p}listchannels`, "content": `Displays a list of channels the bot can be used in.`},
             {"name": `${p}allowrole role`, "content": `Allows users with specified role to use admin bot commands.`},
@@ -199,29 +199,89 @@ class Bot{
             {"name": `${p}listroles`, "content": `Displays a list of roles that can use the bots admin commands.`},
             {"name": `${p}addserver alias ip:port`, "content": `Adds the specified server details into the database.`},
             {"name": `${p}removeserver serverID`, "content": `Removes the specified server from the database.`},
-            {"name": `${p}setauto`, "content": `Sets the current channel as the auto query and display channel where the posts are updated in regualr intervals with the latest information from the server. :no_entry: Do not enable in an existing channel, non autoquery messages are deleted by default.`},
-            {"name": `${p}stopauto`, "content": `Disables autoquery channel from updating.`},
-            {"name": `${p}editserver id type value`, "content": `Edit selected server's value type. Types:**(alias,ip,country,port)**`}
+            {"name": `${p}setauto`, "content": `Sets the current channel as the auto query live feed. Do not enable in an existing channel, non autoquery messages are deleted by default.`},
+            {"name": `${p}stopauto`, "content": `Disables autoquery channel.`},
+            {"name": `${p}editserver id type value`, "content": `Edit selected server's value type. Types: (alias,ip,country,port)`}
 
         ];
 
         const userCommands = [
-            {"name": `${p}servers`, "content": `Lists all servers added to the database.`},
-            {"name": `${p}active`, "content": `Lists all servers added to the database that have at least one player.`},
-            {"name": `${p}q ip:port`, "content": `Query a Unreal Tournament server, if no port is specified 7777 is used. Domain names can also be used instead of an ip.`},
-            {"name": `${p}q serverID`, "content": `Query a Unreal Tournament server by just using the server's id instead of it's ip and port. Use the ${config.commandPrefix}servers command to find a server's id.`},
-            {"name": `${p}ip serverID`, "content": `Displays the specified server's name with a clickable link.`},
-            {"name": `${p}players serverID`, "content": `Displays extended information about players on the server.`},
-            {"name": `${p}players ip:port`, "content": `Displays extended information about players on the server, domain address also work, if no port specified 7777 is used.`},
-            {"name": `${p}extended serverID`, "content": `Displays extended information about the server.`},
+            {"name": `${p}servers`, "content": `Lists all servers.`},
+            {"name": `${p}active`, "content": `Lists all servers that have at least one player.`},
+            {"name": `${p}q ip:port`, "content": `Query a server, if no port is specified 7777 is used. Domain names can also be used instead of an ip.`},
+            {"name": `${p}q serverID`, "content": `Query a server using the server's ID. Use the ${config.commandPrefix}servers command to find a server's id.`},
             {"name": `${p}help`, "content": `Shows this command.`}
+           // {"name": `${p}ip serverID`, "content": `Displays the specified server's name with a clickable link.`},
+           // {"name": `${p}players serverID`, "content": `Displays extended information about players on the server.`},
+           // {"name": `${p}players ip:port`, "content": `Displays extended information about players on the server, domain address also work, if no port specified 7777 is used.`},
+           // {"name": `${p}extended serverID`, "content": `Displays extended information about the server.`},
         ];
 
-        const icon = `:small_orange_diamond:`;
+        //const icon = ` `;
 
-        let string = ` ${icon} ${icon} **Unreal Tournament Server Query Discord Bot Help** ${icon} ${icon}\n\n`;
+       // let string = ` ${icon} ${icon} **Unreal Tournament Server Query Discord Bot Help** ${icon} ${icon}\n\n`;
 
-        string += `${icon+icon} **User Commands** ${icon+icon}\n`;
+       const exampleEmbed = new EmbedBuilder()
+	    .setColor(0x0099FF)
+	    //.setTitle('Some title')
+	    //.setURL('https://discord.js.org/')
+	    .setAuthor({ name: 'Deck UT99 Server Query Bot Commands'})
+        .addFields(
+		    { name: 'Bot Name', value: 'Deck Bot', inline: true },
+		    { name: 'Created by', value: 'Ooper, Nighthawk, rX', inline: true },
+            { name: 'GitHub', value: '[QueryBot](https://github.com/scottadkin/Unreal-Tournament-Server-Query-Discord-Bot)', inline: true },
+            { name: ' ', value: ' ' },
+	    )
+        //.setDescription(')
+	    //.setThumbnail('https://i.imgur.com/AfFp7pu.png')
+	    .addFields(
+	    	{ name: 'Description', value: 'Discord Query Bot for the UTCTF and UTDM community'},
+		    { name: '\u200B', value: '\u200B' },
+	    )
+        .addFields(
+            { name: 'USER COMMANDS', value:' '},
+            { name: '** **', value:' `.servers`\n Lists all servers.\n\n'},
+            { name: '** **', value:' `.active`\n Lists all servers that have at least one player.\n\n'},
+            { name: '** **', value:' `.q ip:port`\n Query a server, if no port is specified 7777 is used. Domain names can also be used instead of an ip.\n\n'},
+            { name: '** **', value:' `.q id`\n Query a server using the server id.\n\n'},
+            { name: '** **', value:' `.help`\n Shows this command.\n\n'},
+         )
+
+        message.author.send({ embeds: [exampleEmbed] });
+
+        const adminRoleName = `${config.defaultAdminRole}`; // Replace this with your admin role name
+        const hasAdminRole = message.member.roles.cache.some(role => role.name === adminRoleName);
+    
+        if (hasAdminRole) {   
+         const exampleEmbed = new EmbedBuilder()
+	    .setColor(0x0099FF)
+
+        .addFields(
+            { name: 'ADMIN COMMANDS', value:' '},
+            { name: '** **', value:' `.allowchannel`\n Enables the bot in the current channel.\n\n'},
+            { name: '** **', value:' `.blockchannel`\n Disables the bot in the current channel.\n\n'},
+            { name: '** **', value:' `.listchannels`\n Displays a list of channels the bot can be used in.\n\n'},
+            { name: '** **', value:' `.allowrole role`\n Allows users with specified role to use admin bot commands.\n\n'},
+            { name: '** **', value:' `.removerole role`\n Stops users with specified role being able to use admin bot commands.\n\n'},
+            { name: '** **', value:' `.listroles`\n Displays a list of roles that can use the bots admin commands.\n\n'},
+            { name: '** **', value:' `.addserver alias ip:port`\n Adds the specified server details into the database.\n\n'},
+            { name: '** **', value:' `.removeserver id`\n Removes the specified server from the database.\n\n'},
+            { name: '** **', value:' `.setauto`\n Sets the current channel as the auto query live feed. Do not enable in an existing channel, non autoquery messages are deleted by default.\n\n'},
+            { name: '** **', value:' `.stopauto`\n Disables autoquery in the current channel.\n\n'},
+            { name: '** **', value:' `.editserver id type value`\n Edit selected servers value type. Types: (alias,ip,country,port)\n\n'},
+        )
+
+        message.author.send({ embeds: [exampleEmbed] });
+        }   
+        /*
+        let string = "```";
+        string += `Unreal Tournament Server Query Discord Bot Commands`;
+        string += "```";
+
+        //use codeblock to show Title
+
+        string += "```";
+        string += `User Commands\n`;
 
         let c = 0;
 
@@ -229,25 +289,31 @@ class Bot{
 
             c = userCommands[i];
 
-            string += `**${c.name}** ${c.content}\n`;
+            string += `${c.name} - ${c.content}\n`;
         }
+        string += "```";
 
-        message.channel.send(string);
+        message.author.send(string); // Send user commands to all users
 
-        string = "";
+        // Check if the user has an admin role
+        const adminRoleName = `${config.defaultAdminRole}`; // Replace this with your admin role name
+        const hasAdminRole = message.member.roles.cache.some(role => role.name === adminRoleName);
     
-        string += `\n${icon+icon} **Admin Commands** ${icon+icon}\n`;
+        if (hasAdminRole) {
+            string = "```";
+            
+            string += `Admin Commands\n`;
+    
+            for(let i = 0; i < adminCommands.length; i++){
+    
+                c = adminCommands[i];
+    
+                string += `${c.name} - ${c.content}\n`;
+            }
+            string += "```";
 
-        for(let i = 0; i < adminCommands.length; i++){
-
-            c = adminCommands[i];
-
-            string += `**${c.name}** ${c.content}\n`;
-        }
-
-        string += `\n:orange_book: **Github Repo** <https://github.com/scottadkin/Unreal-Tournament-Server-Query-Discord-Bot>`;
-
-        message.channel.send(string);
+            message.author.send(string); // Send admin commands to users with an admin role
+        }*/
     }
 
     adminCommands(message, bFailed){
@@ -422,7 +488,7 @@ class Bot{
         }
     }
 
-
+    /*
     async queryServerExtended(message){
 
         try{
@@ -493,7 +559,7 @@ class Bot{
             console.trace(err);
         }
     }
-
+    
 
     async queryPlayers(message){
 
@@ -570,7 +636,7 @@ class Bot{
             console.trace(err);
         }
     }
-
+    */
     async editServer(message){
 
         //this.servers.editServer(message.content);
