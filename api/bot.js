@@ -122,7 +122,7 @@ class Bot{
             if(await this.channels.bBotCanCommentInChannel(message)){
 
                 const helpReg = /^.help$/i;
-                const shortServerQueryReg = /^.q\d+$/i;
+                const shortServerQueryReg = /^.q ?\d+$/i;
                 const serverQueryReg = /^.q .+$/i;
                 const listReg = /^.servers/i;
                 const activeReg = /^.active/i;
@@ -151,12 +151,12 @@ class Bot{
                 }else if(activeReg.test(message.content)){
 
                     this.servers.listServers(Discord, message, true);
-                }
-                /*else if(ipReg.test(message.content)){
+                }/*
+                else if(ipReg.test(message.content)){
 
                     this.servers.getIp(message);
 
-                }else if(extendedReg.test(message.content)){
+                }/*else if(extendedReg.test(message.content)){
 
                     this.queryServerExtended(message);
 
@@ -423,7 +423,7 @@ class Bot{
 
         try{
 
-            const reg = /^.q(\d+)$/i;
+            const reg = /^.q ?(\d+)$/i;
 
             const result = reg.exec(message.content);
 

@@ -301,7 +301,7 @@ class Servers{
         
     }
 
-
+    /*
     async getIp(message){
 
         try{
@@ -349,7 +349,7 @@ class Servers{
             console.trace(err);
         }
     }
-
+    */
 
     createServerString(id, server){
 
@@ -360,8 +360,6 @@ class Servers{
 
         const now = Math.floor(Date.now() * 0.001);
         const diff = now - server.modified;
-
-        
 
         const fixValue = (input, limit, bSpecial) =>{
 
@@ -452,8 +450,6 @@ class Servers{
                 
             }
 
-            
-
             let embed = new Discord.EmbedBuilder()
 
             let title = "Unreal Tournament Server List";
@@ -505,7 +501,7 @@ class Servers{
             if(serverBlocks.length == 1){
                 fields.push({
                     name: "Shorter server query command",
-                    value: `Type **${config.commandPrefix}qID** to query a server instead of ip:port.`,
+                    value: `Type **${config.commandPrefix}q id** to query a server instead of ip:port.`,
                     inline: false
                 });
             }
@@ -521,7 +517,7 @@ class Servers{
                     .setDescription(serverBlocks[i]);
 
                 if(i === serverBlocks.length - 1){
-                    embed.addFields("Shorter server query command", `Type **${config.commandPrefix}qID** to query a server instead of ip:port.` ,false);
+                    embed.addFields("Shorter server query command", `Type **${config.commandPrefix}q id** to query a server instead of ip:port.` ,false);
                 }
 
                 await message.channel.send({ embeds: [embed] });
