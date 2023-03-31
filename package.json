@@ -20,7 +20,9 @@
   "dependencies": {
     "country-list": "^2.3.0",
     "discord.js": "^14.8.0",
+    "geoip-country": "^4.1.50",
     "geoip-lite": "^1.4.7",
+    "ip2location-nodejs": "^9.4.2",
     "promise": "^8.3.0",
     "sqlite3": "^5.1.6"
   }

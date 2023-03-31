@@ -1,11 +1,10 @@
 //const Discord = require('discord.js');
-//const geoip = require('geoip-lite');
+const geoip = require('geoip-country');
 //const countryList = require('country-list');
 //const config = require('./config.json');
 //const Servers = require('./servers');
 //const Channels = require('./channels');
 //const Buffer = require('buffer');
-
 
 class ServerResponse{
 
@@ -22,6 +21,8 @@ class ServerResponse{
         this.bUnreal = false; //Unreal instead of UT
         this.bHaveUnrealBasic = false;
         this.bHaveUnrealMutators = false;
+
+        var geoip = require('geoip-country');
 
         if(discordMessage !== undefined){
 
@@ -41,7 +42,6 @@ class ServerResponse{
         }
 
         //this.servers = new Servers();
-
 
         this.name = "Another UT Server";
         this.gametype = "Deathmatch";
@@ -72,8 +72,7 @@ class ServerResponse{
         ];
 
     }
-
-
+    
     getFlag(country){
 
         if(country === undefined){
@@ -281,19 +280,32 @@ class ServerResponse{
         });
 
     }
+    
+    getCountryFromIP() {
+        const geo = geoip.lookup(this.ip);
+
+        if (geo && geo.country) {
+            return geo.country.toLowerCase();
+        }
+
+        return 'none';
+    }
 
     getServerCountry(){
 
-        let country = "";
+        let country = this.getCountryFromIP();
+        
+        if(country != undefined){
+            if(country != '' && country.toLowerCase() != 'none'){
+                country = `:flag_${country.toLowerCase()}: `;
 
-        if(this.country != undefined){
+                //console.log(`${country}`); //debug country flag from IP
 
-            if(this.country != '' && this.country.toLowerCase() !== 'none'){
-                country = `:flag_${this.country.toLowerCase()}: `;
+                return country;
             }
         }
-
-        return country;
+       //console.log(`2: ${country}`); //debug country flag from IP
+       return country;
     }
 
     async sendFullServerResponse(channels, servers,embedColor, Discord){
