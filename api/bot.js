@@ -122,7 +122,8 @@ class Bot{
             if(await this.channels.bBotCanCommentInChannel(message)){
 
                 const helpReg = /^.help$/i;
-       const shortServerQueryReg = /^.q\d+$/i;
+                const shortServerQueryReg = /^.q\d+$/i;
+                const serverQueryReg = /^.q .+$/i;
                 const listReg = /^.servers/i;
                 const activeReg = /^.active/i;
                 const ipReg = /^.ip\d+/i;
