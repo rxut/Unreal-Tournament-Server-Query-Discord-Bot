@@ -16,6 +16,7 @@ const queries = [
         ip TEXT NOT NULL,
         real_ip TEXT NOT NULL,
         port INTEGER NOT NULL,
+        password TEXT NOT NULL,
         country TEXT NOT NULL,
         name TEXT NOT NULL,
         alias TEXT NOT NULL,

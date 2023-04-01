@@ -16,79 +16,81 @@ class Servers{
     async addServer(message){
 
         try{
-
-            const reg = /^.addserver (.+) ((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:(\d{1,5})|)|(.+?)(:(\d+)|))$/i;
-
+    
+            const reg = /^.addserver (.+?) (unreal:\/\/)?((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:(\d{1,5})|)|(.+?)(:(\d+)|))(\?password=(.+))?$/i;
+    
             const result = reg.exec(message.content);
-
+            //console.log("Message content:", message.content); //Debug line
+            // console.log("Result:", result); //Debug line
+    
             if(result === null){
-
-                message.channel.send(`${config.failIcon} Incorrect syntax for addserver.`);
+    
+                message.channel.send(`${config.failIcon} Incorrect syntax for .addserver. Please use: \`.addserver alias ip:port\``);
                 return;
-
+    
             }else{
+                const domainReg = /^(?=.{1,255})(?:(?!-)[A-Za-z0-9-]{1,63}(?<!-)\.?)+\.[A-Za-z]{2,}$/; // Regex to check if the domain is valid
+                //console.log("result[12]:", domainReg.test(result[7])); // debug line
 
+                if (result[4] === undefined && !domainReg.test(result[7])) {
+                    message.channel.send(`${config.failIcon} Incorrect syntax for .addserver. Please use: \`.addserver alias ip:port\``);
+                    return;
+                }
+    
                 let port = 7777;
                 let ip = 0;
-
-                if(result[3] === undefined){
-
-                    ip = dns.lookup(result[6], async (err, ipResult) =>{
-
+                //console.log("result[12]:", result[12]);
+                let password = result[11] || ''; 
+    
+                if(result[4] === undefined){
+    
+                    dns.lookup(result[7], async (err, ipResult) =>{
+    
                         if(err){
                             message.channel.send(`${config.failIcon} There is no matching ip for that domain address.`);
                             return;
                         }
-
-                        /*if(ipResult === undefined){
-
-                            message.channel.send(`${config.failIcon} There is no matching ip for that domain address.`);
-                            return;
-                        }*/
-
-                        if(result[8] !== undefined){
-
-                            if(result[8] !== ''){
-                                port = parseInt(result[8]);
+    
+                        if(result[9] !== undefined){
+    
+                            if(result[9] !== ''){
+                                port = parseInt(result[9]);
                             }
                         }
-
-                        //console.log(await this.bServerAdded(ipResult));
-                        //ip, realIp, alias, port
-
+    
                         if(!await this.bServerAdded(ipResult, port)){
-
-                            await this.insertServer(result[6], ipResult, result[1], port);
+    
+                            await this.insertServer(result[7], ipResult, result[1], port, password);
                             message.channel.send(`${config.passIcon} Server added successfully.`);
-
+    
                         }else{
                             message.channel.send(`${config.failIcon} Server with that ip and port has already added to database.`);
                         }
                     });   
-
+    
                 }else{
-
-                    ip = result[3];
-
-                    if(result[5] !== undefined){
-                        port = parseInt(result[5]);
+    
+                    ip = result[4];
+    
+                    if(result[6] !== undefined){
+                        port = parseInt(result[6]);
                     }
-
+    
                     if(!await this.bServerAdded(ip, port)){
-
-                        await this.insertServer(ip, ip, result[1], port);
+    
+                        await this.insertServer(ip, ip, result[1], port, password);
                         message.channel.send(`${config.passIcon} Server added successfully.`);
-
+    
                     }else{
                         message.channel.send(`${config.failIcon} Server with that ip and port has already added to database.`);
                     }
                 }
             }
-
+    
         }catch(err){
             console.trace(err);
         }
-
+    
     }
 
     bServerAdded(ip, port){
@@ -112,31 +114,33 @@ class Servers{
             });
         });
     }
+    
 
-    insertServer(ip, realIp, alias, port){
-
-        //console.log(`${ip}, ${realIp}, ${alias}, ${port}`);
-
+    async insertServer(ip, realIp, alias, port, password){
+        //console.log(`IP: ${ip}, Real IP: ${realIp}, Alias: ${alias}, Port: ${port}, Password: ${password}`);
         return new Promise((resolve, reject) =>{
-
             const now = Math.floor(Date.now() * 0.001);
-
-            const query = "INSERT INTO servers VALUES(NULL,?,?,?,?,'None',?,0,0,'N/A','N/A',?,?,-1,0)";
-
+            const query = "INSERT INTO servers VALUES(NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             const vars = [
-                ip, 
-                realIp, 
-                port, 
+                ip,
+                realIp,
+                port,
+                password,
+                "N/A",
                 "Another UT Server",
                 alias,
+                0, // Replace with other values if needed
+                0, // Replace with other values if needed
+                "N/A",
+                "N/A",
                 now,
-                now
+                now,
+                -1,
+                0
             ];
-
+    
             this.db.run(query, vars, (err) =>{
-
                 if(err) reject(err);
-
                 resolve();
             });
         });
@@ -221,7 +225,7 @@ class Servers{
 
             }else{
 
-                message.channel.send(`${config.failIcon} Incorrect syntax for ${config.commandPrefix}removeserver.`);
+                message.channel.send(`${config.failIcon} Incorrect syntax for ${config.commandPrefix}removeserver. Please use: \`.removeserver serverID\``);
             }
 
 
